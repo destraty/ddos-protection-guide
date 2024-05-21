@@ -123,7 +123,7 @@ sudo ipset add my_black_list 192.168.1.3
 
 Блокируем трафик для данного набора ip адресов:
 ```bash
-sudo iptables -I INPUT -m set --match-set blacklist src -j DROP
+sudo iptables -I INPUT -m set --match-set my_black_list src -j DROP
 ```
 ## Команды для проверки работоспособности защитных механизмов
 
